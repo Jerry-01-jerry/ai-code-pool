@@ -3,8 +3,25 @@ import { Icon } from '../components/Icons';
 import './globals.css';
 
 export const metadata = {
-  title: { default: 'AI 码池', template: '%s · AI 码池' },
-  description: '公开分享 Muse 和 Cue 邀请码。',
+  metadataBase: new URL('https://ai-code-pool.netlify.app'),
+  title: { default: 'AI 码池 | 免费 Muse 邀请码与 Cue 邀请码共享', template: '%s · AI 码池' },
+  description: '免费公开分享 Muse 和 Cue 邀请码。Muse 新用户 48 小时内兑换，双方各得 10 亿 Muse 词元；Cue 免费内测邀请码，先到先得。匿名提交，即发即公开，用完即下架。',
+  keywords: ['Muse 邀请码', 'Muse invite code', 'Cue 邀请码', 'Cue invite code', 'Manus Cue 邀请码', 'AI 邀请码', '免费邀请码'],
+  alternates: { canonical: 'https://ai-code-pool.netlify.app' },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: 'website',
+    locale: 'zh_CN',
+    url: 'https://ai-code-pool.netlify.app',
+    siteName: 'AI 码池',
+    title: 'AI 码池 | 免费 Muse 邀请码与 Cue 邀请码共享',
+    description: '免费公开分享 Muse 和 Cue 邀请码。Muse 新用户 48 小时内兑换，双方各得 10 亿 Muse 词元；Cue 免费内测邀请码，先到先得。',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'AI 码池 | 免费 Muse 邀请码与 Cue 邀请码共享',
+    description: '免费公开分享 Muse 和 Cue 邀请码。Muse 新用户 48 小时内兑换，双方各得 10 亿 Muse 词元；Cue 免费内测邀请码，先到先得。',
+  },
 };
 
 export default function Layout({ children }) {
