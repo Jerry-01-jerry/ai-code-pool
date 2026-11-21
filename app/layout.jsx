@@ -43,7 +43,7 @@ export default function Layout({ children }) {
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-8 sm:py-12">{children}</main>
         <footer className="mx-auto w-full max-w-5xl px-4 sm:px-8">
-          <div className="border-t border-line py-5 text-xs text-muted">AI 码池 · Muse / Cue 邀请码共享</div>
+          <div className="border-t border-line py-5 text-xs text-muted">AI 码池 · Muse / Cue 邀请码共享 · <a href="https://www.toolpilot.ai" target="_blank" rel="noopener noreferrer" className="hover:text-ink">Powered by ToolPilot.ai</a></div>
         </footer>
       </body>
     </html>
