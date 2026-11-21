@@ -8,11 +8,13 @@ create table if not exists public.codes (
   tool text not null check (tool in ('Muse', 'Cue')),
   code text not null,
   reward text not null,
-  valid_days integer not null default 30 check (valid_days between 1 and 3650),
+  valid_days integer check (valid_days is null or valid_days between 1 and 3650),
   submitted_at timestamptz not null default now(),
-  expires_at timestamptz not null,
+  expires_at timestamptz,
   status text not null default 'active' check (status in ('active', 'used_up')),
   report_count integer not null default 0 check (report_count >= 0),
+  max_uses integer check (max_uses is null or max_uses >= 1),
+  use_count integer not null default 0 check (use_count >= 0),
   created_at timestamptz not null default now()
 );
 
@@ -32,6 +34,23 @@ as $$
      set report_count = report_count + 1
    where id = code_id;
 $$;
+
+-- 复制计数原子自增；达到总名额后自动下架，避免并发下丢失计数。
+create or replace function public.increment_use(code_id uuid)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  update public.codes
+     set use_count = use_count + 1,
+         status = case when max_uses is not null and use_count + 1 >= max_uses then 'used_up' else status end
+   where id = code_id and status = 'active';
+$$;
+
+-- 仅允许服务端 service_role 调用复制计数函数，anon 不可执行。
+revoke all on function public.increment_use(uuid) from public;
+grant execute on function public.increment_use(uuid) to service_role;
 
 -- 仅允许服务端 service_role 调用举报自增函数，anon 不可执行。
 revoke all on function public.increment_report(uuid) from public;

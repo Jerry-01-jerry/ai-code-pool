@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { reportCodeAction } from '../app/actions';
+import { incrementUseAction, reportCodeAction } from '../app/actions';
 import { dayMs, tools } from '../lib/catalog';
 import { Icon } from './Icons';
 
@@ -48,13 +48,16 @@ function CodeCard({ code, now, onRemove, onReport, reportBusy, reported }) {
     try {
       await copyCode(code.code);
       setCopyStatus('已复制');
+      // 复制记一次使用：达到总名额后服务端自动下架。计数失败不影响复制本身。
+      incrementUseAction(code.id).catch(() => {});
     } catch {
       setCopyStatus('复制失败，请手动复制');
     }
     timer.current = setTimeout(() => setCopyStatus(''), 3000);
   }
 
-  const remaining = Math.ceil((code.expiresAt - now) / dayMs);
+  const remaining = code.expiresAt === null ? null : Math.ceil((code.expiresAt - now) / dayMs);
+  const remainingUses = code.maxUses == null ? null : Math.max(code.maxUses - code.useCount, 0);
   return (
     <article className="min-w-0 rounded-xl border border-line bg-white p-4 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-3">
@@ -68,7 +71,8 @@ function CodeCard({ code, now, onRemove, onReport, reportBusy, reported }) {
       <p className="mt-4 break-words text-sm text-ink"><span className="mr-2 text-muted">奖励</span>{code.reward}</p>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-3 text-xs text-muted">
         <span>提交于 <time dateTime={new Date(code.submittedAt).toISOString()}>{dateFormat.format(code.submittedAt)}</time></span>
-        <span className="rounded-full bg-[#edf4ed] px-2 py-0.5 font-medium text-accent">剩余 {remaining} 天</span>
+        <span className="rounded-full bg-[#edf4ed] px-2 py-0.5 font-medium text-accent">{remaining === null ? '长期有效' : `剩余 ${remaining} 天`}</span>
+        {remainingUses !== null && <span className="rounded-full bg-[#edf4ed] px-2 py-0.5 font-medium text-accent">剩余 {remainingUses} 次（共 {code.maxUses} 次）</span>}
         <button type="button" onClick={() => onReport(code)} disabled={reportBusy || reported} aria-label={`举报 ${code.code}`} className="min-h-8 shrink-0 px-1 text-muted underline-offset-4 hover:text-amber-700 hover:underline disabled:cursor-wait disabled:opacity-60">
           {reported ? '已举报' : reportBusy ? '举报中…' : '举报'}
         </button>

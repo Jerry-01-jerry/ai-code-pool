@@ -29,8 +29,12 @@ export default function SubmitForm() {
         <textarea name="reward" required maxLength={limits.reward} rows={3} placeholder="例如 5 次使用机会" className="field resize-y" />
       </label>
       <label className="grid gap-2 text-sm font-semibold">
-        有效天数
-        <input name="valid_days" type="number" required min={1} max={limits.valid_days} step={1} defaultValue={defaultDays} className="field" />
+        总名额（可选）
+        <input name="max_uses" type="number" min={1} max={1000} step={1} placeholder="例如 5，留空表示不限名额" className="field" />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold">
+        有效天数（可选）
+        <input name="valid_days" type="number" min={1} max={limits.valid_days} step={1} defaultValue={defaultDays} placeholder="留空表示不限时" className="field" />
       </label>
       {state.error && <p role="alert" className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-800">{state.error}</p>}
       <div className="border-t border-line pt-5"><PublishButton /></div>
