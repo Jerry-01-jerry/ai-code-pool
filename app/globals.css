@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-canvas font-sans text-ink antialiased; }
+  :focus-visible { @apply outline outline-2 outline-offset-4 outline-accent; }
+}
+
+@layer components {
+  .button-primary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-ink px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent disabled:cursor-wait disabled:opacity-60;
+  }
+  .field {
+    @apply w-full rounded-lg border border-line bg-white px-3.5 py-3 text-sm text-ink placeholder:text-muted;
+  }
+}
+
+.pool-pattern {
+  background:
+    repeating-radial-gradient(ellipse at 100% 55%, transparent 0 23px, rgb(185 230 176 / 24%) 24px 25px, transparent 26px 40px),
+    radial-gradient(ellipse at right, #38634b, #19362a 75%);
+  mask-image: linear-gradient(to right, transparent, black 35%);
+}
+
+dialog::backdrop { background: rgb(15 32 24 / 54%); }
