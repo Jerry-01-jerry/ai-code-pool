@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { reportCodeAction, useUpCode } from '../app/actions';
+import { reportCodeAction } from '../app/actions';
 import { dayMs, tools } from '../lib/catalog';
 import { Icon } from './Icons';
 
@@ -88,7 +88,25 @@ export default function CodePool({ codes, now }) {
   const [notice, setNotice] = useState('');
   const [reportBusyId, setReportBusyId] = useState(null);
   const [reportedIds, setReportedIds] = useState(() => new Set());
+  const [hiddenIds, setHiddenIds] = useState(() => new Set());
   const dialog = useRef(null);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('ai-code-pool-hidden') ?? '[]');
+      if (Array.isArray(stored)) setHiddenIds(new Set(stored));
+    } catch {
+      // Ignore a corrupt local hide list; start with nothing hidden.
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('ai-code-pool-hidden', JSON.stringify([...hiddenIds]));
+    } catch {
+      // Private mode may block storage; the hide still applies for this visit.
+    }
+  }, [hiddenIds]);
 
   useEffect(() => {
     function refresh() {
@@ -108,24 +126,18 @@ export default function CodePool({ codes, now }) {
     dialog.current.showModal();
   }
 
-  async function remove() {
-    if (busy || !selected) return;
-    setBusy(true);
-    setError('');
-    try {
-      const result = await useUpCode(selected.id);
-      if (result.error) {
-        setError(result.error);
-        return;
-      }
-      setNotice(`${selected.code} 已下架。`);
-      dialog.current.close();
-      router.refresh();
-    } catch {
-      setError('下架失败，请稍后重试。');
-    } finally {
-      setBusy(false);
-    }
+  function remove() {
+    if (!selected) return;
+    // Local-only hide: only this browser stops showing the code.
+    // Nothing is written to the server, so other visitors still see it.
+    setHiddenIds((prev) => new Set(prev).add(selected.id));
+    setNotice(`${selected.code} 已在你的浏览器里隐藏，其他人还能看到。`);
+    dialog.current.close();
+  }
+
+  function restoreHidden() {
+    setHiddenIds(new Set());
+    setNotice('已恢复显示你隐藏的邀请码。');
   }
 
   async function report(code) {
@@ -149,7 +161,7 @@ export default function CodePool({ codes, now }) {
   }
 
   const term = query.trim().toLowerCase();
-  const visible = codes.filter((code) => (!tool || code.tool === tool) && code.code.toLowerCase().includes(term));
+  const visible = codes.filter((code) => !hiddenIds.has(code.id) && (!tool || code.tool === tool) && code.code.toLowerCase().includes(term));
 
   return (
     <section aria-labelledby="pool-title" className="mt-8 sm:mt-10">
@@ -167,6 +179,10 @@ export default function CodePool({ codes, now }) {
           </button>
         ))}
       </div>
+      <p className="mt-3 text-xs leading-5 text-muted">点“已用完”只会在你的浏览器里隐藏这个码，不会影响其他人；码还能用的话请不要点。</p>
+      {hiddenIds.size > 0 && (
+        <p className="mt-2 text-xs text-muted">你已隐藏 {hiddenIds.size} 个码。<button type="button" onClick={restoreHidden} className="px-1 font-semibold text-accent underline-offset-4 hover:underline">恢复显示</button></p>
+      )}
       <p role="status" className="sr-only">{notice || `找到 ${visible.length} 个可用邀请码`}</p>
       {visible.length === 0 && (
         <p className="mt-5 rounded-xl border border-dashed border-line py-10 text-center text-sm text-muted">{term ? '没有匹配的邀请码。' : '暂无可用邀请码。'}</p>
@@ -192,12 +208,12 @@ export default function CodePool({ codes, now }) {
         })}
       </div>
       <dialog ref={dialog} aria-labelledby="remove-title" onCancel={(event) => { if (busy) event.preventDefault(); }} className="m-auto w-[calc(100%-2rem)] max-w-md rounded-xl border border-line bg-white p-6 text-ink shadow-xl">
-        <h2 id="remove-title" className="text-lg font-bold">确认标记为已用完？</h2>
-        <p className="mt-2 break-words text-sm leading-6 text-muted">邀请码 <strong>{selected?.code}</strong> 下架后，其他访客将无法看到。</p>
+        <h2 id="remove-title" className="text-lg font-bold">确认这个码已经用完了？</h2>
+        <p className="mt-2 break-words text-sm leading-6 text-muted">邀请码 <strong>{selected?.code}</strong> 点确定后，只会在你的浏览器里隐藏，其他人还能看到。请确认它真的已经没有名额了；如果还能用，请不要点。</p>
         {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
         <div className="mt-5 flex justify-end gap-3">
           <button type="button" autoFocus disabled={busy} onClick={() => dialog.current.close()} className="min-h-11 rounded-lg border border-line px-4 text-sm font-semibold hover:bg-canvas">取消</button>
-          <button type="button" disabled={busy} onClick={remove} className="button-primary">{busy ? '下架中…' : '确认下架'}</button>
+          <button type="button" disabled={busy} onClick={remove} className="button-primary">确认隐藏</button>
         </div>
       </dialog>
     </section>

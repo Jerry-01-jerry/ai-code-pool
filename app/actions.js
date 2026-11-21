@@ -1,20 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { markCodeUsedUp, reportCode } from '../lib/store';
-
-export async function useUpCode(id) {
-  if (typeof id !== 'string' || id.length > 36) return { error: '邀请码无效。' };
-  try {
-    await markCodeUsedUp(id);
-  } catch (error) {
-    console.error('Unable to retire invitation code', error);
-    return { error: '下架失败，请稍后重试。' };
-  }
-
-  revalidatePath('/');
-  return { ok: true };
-}
+import { reportCode } from '../lib/store';
 
 export async function reportCodeAction(id) {
   if (typeof id !== 'string' || id.length > 36) return { error: '邀请码无效。' };
