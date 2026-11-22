@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { validateSubmission } from '../../lib/catalog';
-import { addCode } from '../../lib/store';
+import { addCode, findDuplicate } from '../../lib/store';
 
 export async function submitCode(_previous, form) {
   let submission;
@@ -14,6 +14,8 @@ export async function submitCode(_previous, form) {
   }
 
   try {
+    const duplicate = await findDuplicate(submission.tool, submission.code);
+    if (duplicate) return { error: duplicate };
     await addCode(submission);
   } catch (error) {
     console.error('Unable to publish invitation code', error);
