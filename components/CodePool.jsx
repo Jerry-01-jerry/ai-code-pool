@@ -197,6 +197,7 @@ export default function CodePool({ codes, now }) {
           if (!group.length) return null;
           return (
             <section key={name} aria-label={`${name} 邀请码`} className="min-w-0">
+              <ToolHero name={name} />
               <div className="mb-3 flex items-center justify-between border-b border-line pb-2">
                 <h3 className="flex items-center gap-2.5 text-lg font-bold">
                   <span aria-hidden="true" className={`h-2 w-2 rounded-full ${name === 'Muse' ? 'bg-[#4d8a5f]' : 'bg-[#8268a8]'}`} />
@@ -222,4 +223,30 @@ export default function CodePool({ codes, now }) {
       </dialog>
     </section>
   );
+}
+
+function ToolHero({ name }) {
+  if (name === 'Muse') {
+    return (
+      <div className="mb-4 overflow-hidden rounded-2xl bg-[#08090c] text-center text-[#f2f3f5] shadow-sm">
+        <div className="relative px-4 pt-6">
+          <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[-40px] h-40 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(120,160,255,0.28),transparent)] blur-md" />
+          <p className="relative text-lg font-bold">邀请好友</p>
+          <img src="/muse-friends.jpg" alt="Muse 的四个形象" width="1050" height="330" className="relative mx-auto mt-3 w-full max-w-md" />
+        </div>
+        <p className="px-5 pb-5 pt-4 text-sm leading-relaxed text-[#b9bcc4]">只要 TA 在加入后 48 小时内通过“设置”兑现邀请码，你们就能分别获得 10 亿个 Muse 词元。</p>
+      </div>
+    );
+  }
+  if (name === 'Cue') {
+    return (
+      <div className="mb-4 overflow-hidden rounded-2xl bg-[#141414] px-5 pb-6 pt-6 text-center text-[#f2f2f2] shadow-sm">
+        <img src="/cue-card.jpg" alt="Cue 邀请卡" width="1000" height="622" className="mx-auto w-full max-w-xs drop-shadow-[0_12px_28px_rgba(0,0,0,0.55)]" />
+        <p className="mt-5 text-xs tracking-[0.35em] text-[#9a9a9a]">仅限受邀</p>
+        <p className="mt-2 text-xl font-extrabold leading-snug">为少数人而留<br />下一位由你决定</p>
+        <p className="mt-2 text-sm text-[#a8a8a8]">Cue 当前限量开放中，每个码只有几次邀请，用完即止。</p>
+      </div>
+    );
+  }
+  return null;
 }
