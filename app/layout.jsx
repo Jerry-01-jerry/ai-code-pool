@@ -29,21 +29,26 @@ export default function Layout({ children }) {
   return (
     <html lang="zh-CN">
       <body className="flex min-h-screen flex-col">
-        <header className="border-b border-line bg-white">
-          <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-8">
-            <Link href="/" className="flex items-center gap-2.5 font-bold" aria-label="AI 码池首页">
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-ink text-[#ccedb9]"><Icon name="logo" className="h-5 w-5" /></span>
+        <header className="border-b border-line">
+          <div className="site-shell flex min-h-[4.5rem] items-center justify-between gap-4">
+            <Link href="/" className="flex shrink-0 items-center gap-2.5 text-base font-bold" aria-label="AI 码池首页">
+              <span className="grid size-8 place-items-center rounded-md border border-line text-accent">
+                <Icon name="logo" className="size-4" />
+              </span>
               AI 码池
             </Link>
-            <nav aria-label="主导航" className="flex items-center gap-4 sm:gap-7">
-              <Link href="/" className="hidden text-sm font-medium text-muted hover:text-ink sm:block">邀请码池</Link>
-              <Link href="/submit" className="button-primary"><Icon name="plus" />提交邀请码</Link>
+            <nav aria-label="主导航" className="flex items-center gap-7">
+              <Link href="/" className="hidden text-sm font-medium text-muted transition-colors hover:text-ink sm:block">邀请码池</Link>
+              <Link href="/submit" className="button-secondary"><Icon name="plus" />提交邀请码</Link>
             </nav>
           </div>
         </header>
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-8 sm:py-12">{children}</main>
-        <footer className="mx-auto w-full max-w-5xl px-4 sm:px-8">
-          <div className="border-t border-line py-5 text-xs text-muted">AI 码池 · Muse / Cue 邀请码共享 · <a href="https://www.toolpilot.ai" target="_blank" rel="noopener noreferrer" className="hover:text-ink">Powered by ToolPilot.ai</a></div>
+        <main className="site-shell flex-1 pb-16 sm:pb-24">{children}</main>
+        <footer className="border-t border-line">
+          <div className="site-shell flex flex-wrap justify-between gap-x-6 gap-y-2 py-6 text-sm text-muted">
+            <span>AI 码池 · Muse / Cue 邀请码共享</span>
+            <a href="https://www.toolpilot.ai" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:text-ink hover:underline">Powered by ToolPilot.ai</a>
+          </div>
         </footer>
       </body>
     </html>

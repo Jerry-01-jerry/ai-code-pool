@@ -3,24 +3,108 @@
 @tailwind utilities;
 
 @layer base {
+  :root { color-scheme: dark; }
   body { @apply bg-canvas font-sans text-ink antialiased; }
   :focus-visible { @apply outline outline-2 outline-offset-4 outline-accent; }
+  ::selection { @apply bg-accent text-canvas; }
 }
 
 @layer components {
+  .site-shell {
+    @apply mx-auto w-full max-w-[75rem] px-5 sm:px-8 lg:px-10;
+  }
+
+  .button-primary,
+  .button-secondary {
+    @apply inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-wait disabled:opacity-60;
+  }
+
   .button-primary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-ink px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent disabled:cursor-wait disabled:opacity-60;
+    @apply border-transparent bg-ink text-canvas hover:bg-white/85;
   }
+
+  .button-secondary {
+    @apply border-line bg-panel text-ink hover:border-muted hover:bg-inset;
+  }
+
   .field {
-    @apply w-full rounded-lg border border-line bg-white px-3.5 py-3 text-sm text-ink placeholder:text-muted;
+    @apply min-h-12 w-full min-w-0 rounded-md border border-line bg-inset px-3.5 py-2.5 text-base font-normal text-ink transition-colors placeholder:text-muted hover:border-muted;
+  }
+
+  .select-field {
+    @apply appearance-none pr-10;
+  }
+
+  .eyebrow {
+    @apply flex items-center gap-3 text-sm font-medium text-muted;
+  }
+
+  .accent-rule {
+    @apply block h-px w-5 shrink-0 bg-accent;
+  }
+
+  .home-intro {
+    @apply grid items-end gap-5 border-b border-line pb-9 pt-12 sm:pb-14 sm:pt-20 lg:grid-cols-[1fr_25rem] lg:gap-8 lg:pb-16 lg:pt-24;
+  }
+
+  .home-title {
+    font-size: clamp(3.6rem, 8.2vw, 7rem);
+    line-height: 1.08;
+    @apply mt-4 font-bold tracking-[-0.065em] sm:mt-5;
+  }
+
+  .filter-button {
+    @apply min-h-10 rounded-[0.25rem] px-4 text-sm font-medium text-muted transition-colors hover:bg-inset hover:text-ink;
+  }
+
+  .filter-button[aria-pressed="true"] {
+    @apply bg-ink text-canvas;
+  }
+
+  .count-badge {
+    @apply inline-flex max-w-full items-center rounded border border-line bg-inset px-2 py-1 font-medium;
+  }
+
+  .code-card {
+    @apply min-w-0 rounded-lg border border-line bg-panel p-4 transition-[transform,border-color] sm:p-5;
+  }
+
+  .code-text {
+    @apply min-w-0 select-all font-mono text-xl font-semibold tracking-tight sm:text-[1.625rem];
+    overflow-wrap: anywhere;
+  }
+
+  .notice {
+    @apply break-words rounded-md border border-line bg-panel px-4 py-3 text-sm text-accent;
   }
 }
 
-.pool-pattern {
-  background:
-    repeating-radial-gradient(ellipse at 100% 55%, transparent 0 23px, rgb(185 230 176 / 24%) 24px 25px, transparent 26px 40px),
-    radial-gradient(ellipse at right, #38634b, #19362a 75%);
-  mask-image: linear-gradient(to right, transparent, black 35%);
+.tool-art {
+  height: clamp(8rem, 17vw, 11rem);
 }
 
-dialog::backdrop { background: rgb(15 32 24 / 54%); }
+.tool-art-muse { background: #0a0a0a; }
+.tool-art-cue { background: #161616; }
+
+dialog::backdrop { background: rgb(0 0 0 / 72%); }
+
+@media (hover: hover) and (pointer: fine) {
+  .code-card:hover {
+    transform: translateY(-2px);
+    border-color: #535353;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .enter { animation: enter 300ms ease-out both; }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  .code-card:hover { transform: none; }
+}
