@@ -37,7 +37,7 @@ export default function SubmitForm() {
       <div className="grid gap-5 sm:grid-cols-2 sm:gap-4">
         <label className="grid min-w-0 gap-2 text-sm font-semibold">
           <span>总名额 <span className="font-normal text-muted">（可选）</span></span>
-          <input name="max_uses" type="number" min={1} max={1000} step={1} placeholder="留空表示不限名额" className="field" />
+          <input name="max_uses" type="number" min={1} max={1000} step={1} placeholder="留空表示不限名额（小豆默认 1）" className="field" />
         </label>
         <label className="grid min-w-0 gap-2 text-sm font-semibold">
           <span>有效天数 <span className="font-normal text-muted">（可选）</span></span>

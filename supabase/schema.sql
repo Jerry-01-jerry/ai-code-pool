@@ -5,7 +5,7 @@
 
 create table if not exists public.codes (
   id uuid primary key default gen_random_uuid(),
-  tool text not null check (tool in ('Muse', 'Cue')),
+  tool text not null check (tool in ('Muse', 'Cue', '小豆')),
   code text not null,
   reward text not null,
   valid_days integer check (valid_days is null or valid_days between 1 and 3650),

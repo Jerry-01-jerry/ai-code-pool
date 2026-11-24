@@ -251,6 +251,11 @@ const toolDetails = {
     title: '为少数人而留，下一位由你决定',
     description: 'Cue 当前限量开放中，每个码只有几次邀请，用完即止。',
   },
+  小豆: {
+    label: '豆包旗下 · 邀请制公测',
+    title: '懂你、还能主动帮你办事的个人助理',
+    description: '小豆 11 月 24 日开启公测，凭邀请码体验并获赠免费额度。一个码只能一人用，复制后会自动下架，请只在马上要用时复制。',
+  },
 };
 
 function ToolHero({ name }) {
@@ -258,9 +263,15 @@ function ToolHero({ name }) {
 
   return (
     <>
-      <div className={`tool-art flex items-center justify-center border-y border-line ${name === 'Muse' ? 'tool-art-muse' : 'tool-art-cue'}`}>
-        <img src={details.image} alt={details.alt} width={details.width} height={details.height} className={`block w-auto max-w-full object-contain ${name === 'Muse' ? 'max-h-full' : 'max-h-[82%]'}`} />
-      </div>
+      {details.image ? (
+        <div className={`tool-art flex items-center justify-center border-y border-line ${name === 'Muse' ? 'tool-art-muse' : 'tool-art-cue'}`}>
+          <img src={details.image} alt={details.alt} width={details.width} height={details.height} className={`block w-auto max-w-full object-contain ${name === 'Muse' ? 'max-h-full' : 'max-h-[82%]'}`} />
+        </div>
+      ) : (
+        <div className="tool-art tool-art-cue flex items-center justify-center border-y border-line">
+          <span aria-hidden="true" className="text-5xl font-bold tracking-[-0.06em] text-ink sm:text-6xl">{name}</span>
+        </div>
+      )}
       <div className="px-4 pb-5 pt-4 sm:px-5">
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
           <p className="text-base font-semibold">{details.title}</p>
